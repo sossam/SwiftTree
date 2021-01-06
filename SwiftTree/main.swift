@@ -31,21 +31,35 @@ class BinarySearchTree {
         while true {
             if currentNode.data > data {
                 guard let nextNode = currentNode.left else {
-                    currentNode.left = Node.init(data: data)
-                    return
+                    return currentNode.left = Node.init(data: data)
                 }
                 currentNode = nextNode
             } else {
                 guard let nextNode = currentNode.right else {
-                    currentNode.right = Node.init(data: data)
-                    return
+                    return currentNode.right = Node.init(data: data)
                 }
                 currentNode = nextNode
             }
         }
     }
+    
+    func search(from data: Int) -> Bool {
+        if root == nil { return false }
+        
+        var currentNode = root
+        while let node = currentNode {
+            if node.data == data {
+                return true
+            }
+            if node.data > data {
+                currentNode = node.left
+            } else {
+                currentNode = node.right
+            }
+        }
+        return false
+    }
 }
-
 
 let BST = BinarySearchTree.init()
 BST.insert(20)
@@ -55,3 +69,12 @@ BST.insert(12)
 BST.insert(16)
 BST.insert(35)
 BST.insert(37)
+
+
+print(BST.search(from: 20))
+print(BST.search(from: 15))
+print(BST.search(from: 12))
+print(BST.search(from: 60))
+print(BST.search(from: 0))
+print(BST.search(from: 100))
+
