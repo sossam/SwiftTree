@@ -18,7 +18,6 @@ class Node<T: Comparable> {
     }
 }
 
-
 class BinarySearchTree<T: Comparable> {
     var root: Node<T>?
     
@@ -59,11 +58,13 @@ class BinarySearchTree<T: Comparable> {
         }
         return false
     }
-    
+}
+
+extension BinarySearchTree {
     func drawDiagram() {
         print(diagram(for: self.root))
     }
-
+    
     private func diagram(for node: Node<T>?,
                          _ top: String = "",
                          _ root: String = "",
@@ -79,6 +80,7 @@ class BinarySearchTree<T: Comparable> {
             + diagram(for: node.left, bottom + "│ ", bottom + "└──", bottom + " ")
     }
 }
+
 
 let BST = BinarySearchTree<Int>()
 BST.insert(20)
