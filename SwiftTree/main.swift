@@ -28,6 +28,7 @@ class BinarySearchTree<T: Comparable> {
         
         var currentNode = root
         while true {
+            if currentNode.data == data { return }
             if currentNode.data > data {
                 guard let nextNode = currentNode.left else {
                     return currentNode.left = Node.init(data: data)
@@ -58,6 +59,88 @@ class BinarySearchTree<T: Comparable> {
         }
         return false
     }
+    
+    func remove(from data: T) -> Bool {
+        guard let root = self.root, root.data != data else { return false }
+        
+        var parentNode = root
+        var currentNode: Node? = root
+        
+        //삭제할 노드 탐색
+        while let node = currentNode {
+            if node.data == data {
+                break
+            }
+            if node.data > data {
+                currentNode = node.left
+            } else {
+                currentNode = node.right
+            }
+            parentNode = node
+        }
+        
+        guard let deleteNode = currentNode else {       //탐색 실패
+            return false
+        }
+        
+        
+        // 1. 자식이 없는 노드 삭제(Leaf Node)
+        if deleteNode.left == nil && deleteNode.right == nil {
+            if parentNode.data > data {
+                parentNode.left = nil
+            } else {
+                parentNode.right = nil
+            }
+            return true
+        }
+        
+        // 2. 자식이 1개 있는 노드 삭제
+        if (deleteNode.left != nil) && (deleteNode.right == nil) {
+            if parentNode.data > data {
+                parentNode.left = deleteNode.left
+            } else {
+                parentNode.right = deleteNode.left
+            }
+            return true
+        }
+        if (deleteNode.left == nil) && (deleteNode.right != nil) {
+            if parentNode.data > data {
+                parentNode.left = deleteNode.right
+            } else {
+                parentNode.right = deleteNode.right
+            }
+            return true
+        }
+        
+        // 3. 자식이 2개 있는 노드 삭제
+        guard let rightNode = deleteNode.right else { return false }
+
+        var changeNode = rightNode
+        var changeParentNode = rightNode
+
+        while let nextNode = changeNode.left {
+            changeParentNode = changeNode
+            changeNode = nextNode
+        }
+
+        if let rightNode = changeNode.right {
+            changeParentNode.left = rightNode
+        } else {
+            changeParentNode.left = nil
+        }
+
+        if parentNode.data > data {
+            parentNode.left = changeNode
+        } else {
+            parentNode.right = changeNode
+        }
+
+        // Delete Node의 왼쪽, 오른쪽 자식을 changeNode에게 이식
+        changeNode.left = deleteNode.left
+        changeNode.right = deleteNode.right
+        
+        return true
+    }
 }
 
 extension BinarySearchTree {
@@ -83,21 +166,21 @@ extension BinarySearchTree {
 
 
 let BST = BinarySearchTree<Int>()
-BST.insert(20)
-BST.insert(15)
-BST.insert(30)
-BST.insert(12)
-BST.insert(16)
 BST.insert(35)
-BST.insert(37)
+BST.insert(35)
+BST.insert(10)
+BST.insert(40)
+BST.insert(7)
+BST.insert(30)
+BST.insert(25)
+BST.insert(32)
+BST.insert(16)
+BST.insert(28)
+BST.insert(34)
+BST.insert(18)
 
 BST.drawDiagram()
 
-print(BST.search(from: 20))
-print(BST.search(from: 15))
-print(BST.search(from: 12))
-print(BST.search(from: 60))
-print(BST.search(from: 0))
-print(BST.search(from: 100))
+print(BST.remove(from: 35))
 
-
+BST.drawDiagram()
